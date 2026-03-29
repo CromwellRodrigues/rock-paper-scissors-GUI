@@ -1,9 +1,22 @@
+const rock = document.getElementById("rock");
+const paper = document.getElementById("paper");
+const scissors = document.getElementById("scissors");
+
+
+// Add an event listener to the buttons that call your playRound function with the correct playerSelection every time a button is clicked.
+rock.addEventListener("click", ()=> handlePlayerChoice("rock"));
+paper.addEventListener("click", ()=> handlePlayerChoice("paper"));
+scissors.addEventListener("click", ()=> handlePlayerChoice("scissors"));
+
 const choices = ["rock", "paper", "scissors"];
+
+
 
 let computerScore = 0;
 let playerScore = 0;
 let gameRoundNumber = 0;
 let gameOn = false
+let winningScore = 5;
 
 function getComputerChoice() {
     const randomChoice = Math.floor(Math.random() * choices.length);
@@ -14,31 +27,31 @@ const computerSelection = getComputerChoice();
 console.log(computerSelection);
 
 
-function getHumanChoice() {
-    let humanInput = prompt("Please choose rock, paper or scissors: ") ;
+function handlePlayerChoice(playerSelection) {
+    const computerSelection = getComputerChoice();
+    const result = playRound(playerSelection, computerSelection);
+    console.log(result);
 
+   
     
-    if (humanInput === null) {
-        return null;
+    console.log(`Player Score: ${playerScore} | Computer Score: ${computerScore}`);
+    const resultDiv = document.getElementById("result");
+    const line = document.createElement("p");
+    line.textContent = `${result} Player : ${playerScore} Computer: ${computerScore}`;
+    resultDiv.prepend(line); 
+
+
+    if (playerScore === winningScore || computerScore === winningScore) {
+        const winnerLine = document.createElement("p");
+        winnerLine.textContent = playerScore === winningScore ? "Congratulations! You won the game!" : 
+        "Game Over! Better luck next time!";
+        resultDiv.prepend(winnerLine);
+        rock.disabled = true;
+        paper.disabled = true;
+        scissors.disabled = true;
     }
 
-   
-   
-
-    let humanChoice = humanInput.trim().toLowerCase();
-
-   if (humanChoice === "") {
-        return null;
 }
-    if (choices.includes(humanChoice)) {
-        return humanChoice;
-    }
-
-    return null;
-  
-}
-
-
 
 
 
@@ -56,7 +69,8 @@ function playRound(humanChoice, computerChoice) {
           console.log(playerScore);
            playerScore++;
            console.log(`Player Score: ${playerScore}`);
-            return `You win! ${humanChoice} beats ${computerChoice}`;
+            return `You win!\n
+            ${humanChoice.toUpperCase()} beats ${computerChoice.toUpperCase()}`;
         }
 
     if ((computerChoice === "rock" && humanChoice === "scissors") ||
@@ -65,47 +79,9 @@ function playRound(humanChoice, computerChoice) {
            
 
             computerScore++;
-            return `You lose! ${computerChoice} beats ${humanChoice}`;
+            return `You lose! ${computerChoice.toUpperCase()} beats ${humanChoice.toUpperCase()}`;
         }
 
 }
 
 
-
-
-const playGame = () => {
-    gameOn = true;
-    gameRoundNumber = 0
-    playerScore = 0;
-    computerScore = 0;
-    
-    while (gameRoundNumber < 5) {
-        
-        console.log(`Round ${gameRoundNumber + 1}`);
-        const computerSelection = getComputerChoice();
-        const humanSelection = getHumanChoice();
-
-        if (humanSelection === null) {
-            console.log("Game cancelled by the user.");
-            break;
-        }
-
-        const result = playRound(humanSelection, computerSelection);
-        gameRoundNumber++;
-        console.log(result);
-        console.log(`Player Score: ${playerScore} | Computer Score: ${computerScore}`);
-    }
-
-    gameOn= false;
-    const playAgain = confirm("Game over! Do you want to play again?");
-
-    if (playAgain) {
-        playGame();
-    } else {
-        console.log("Thanks for playing!");
-    }
-
-    
-}
-
-playGame();
