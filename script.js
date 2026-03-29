@@ -1,12 +1,16 @@
 const rock = document.getElementById("rock");
 const paper = document.getElementById("paper");
 const scissors = document.getElementById("scissors");
+const restartGame = document.getElementById("restart");
+const playerScoreEl = document.getElementById("player-score");
+const computerScoreEl = document.getElementById("computer-score");
 
 
 // Add an event listener to the buttons that call your playRound function with the correct playerSelection every time a button is clicked.
 rock.addEventListener("click", ()=> handlePlayerChoice("rock"));
 paper.addEventListener("click", ()=> handlePlayerChoice("paper"));
 scissors.addEventListener("click", ()=> handlePlayerChoice("scissors"));
+restartGame.addEventListener("click", resetGame);
 
 const choices = ["rock", "paper", "scissors"];
 
@@ -14,8 +18,8 @@ const choices = ["rock", "paper", "scissors"];
 
 let computerScore = 0;
 let playerScore = 0;
-let gameRoundNumber = 0;
-let gameOn = false
+
+
 let winningScore = 5;
 
 function getComputerChoice() {
@@ -23,22 +27,18 @@ function getComputerChoice() {
     return choices[randomChoice];
 }
 
-const computerSelection = getComputerChoice();
-console.log(computerSelection);
-
 
 function handlePlayerChoice(playerSelection) {
     const computerSelection = getComputerChoice();
     const result = playRound(playerSelection, computerSelection);
-    console.log(result);
-
-   
+    console.log(result)   
     
     console.log(`Player Score: ${playerScore} | Computer Score: ${computerScore}`);
     const resultDiv = document.getElementById("result");
     const line = document.createElement("p");
     line.textContent = `${result} Player : ${playerScore} Computer: ${computerScore}`;
     resultDiv.prepend(line); 
+    updateScores();
 
 
     if (playerScore === winningScore || computerScore === winningScore) {
@@ -84,4 +84,20 @@ function playRound(humanChoice, computerChoice) {
 
 }
 
+function resetGame() {
+    playerScore = 0;
+    computerScore = 0;
+    gameRoundNumber = 0;
+    gameOn = false;
+    rock.disabled = false;
+    paper.disabled = false;
+    scissors.disabled = false;
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "";
+    updateScores();
+}
 
+function updateScores() {
+    playerScoreEl.textContent = playerScore;
+    computerScoreEl.textContent = computerScore;
+}
