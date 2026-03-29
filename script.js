@@ -37,6 +37,7 @@ function handlePlayerChoice(playerSelection) {
     const resultDiv = document.getElementById("result");
     const line = document.createElement("p");
     line.textContent = `${result} Player : ${playerScore} Computer: ${computerScore}`;
+    line.className = `p-2 mb-2 rounded-lg font-semibold ${getRoundClass(result)}`;
     resultDiv.prepend(line); 
     updateScores();
 
@@ -45,6 +46,8 @@ function handlePlayerChoice(playerSelection) {
         const winnerLine = document.createElement("p");
         winnerLine.textContent = playerScore === winningScore ? "Congratulations! You won the game!" : 
         "Game Over! Better luck next time!";
+
+        winnerLine.className = `my-4 px-8 py-4 rounded-lg text-white font-extrabold tracking-wide ${playerScore === winningScore ? "bg-emerald-600" : "bg-rose-600"}`;
         resultDiv.prepend(winnerLine);
         rock.disabled = true;
         paper.disabled = true;
@@ -100,4 +103,17 @@ function resetGame() {
 function updateScores() {
     playerScoreEl.textContent = playerScore;
     computerScoreEl.textContent = computerScore;
+}
+
+
+function getRoundClass(resultText) {
+    if(resultText.startsWith("Congratulations") ) {
+        return "text-emerald-700 bg-emerald-100 border border-emerald-300";
+    }
+
+    if(resultText.startsWith("Game Over") ) {
+        return "text-red-700 bg-red-100 border border-red-300";
+    }
+
+    return "text-amber-700 bg-amber-100 border border-amber-300";
 }
